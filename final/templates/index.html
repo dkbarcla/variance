@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+
+        <!-- Required meta tags -->
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <!-- documentation at http://getbootstrap.com/docs/4.0/, alternative themes at https://bootswatch.com/4-alpha/ -->
+        <link href="https://bootswatch.com/4/darkly/bootstrap.min.css" rel="stylesheet"/>
+
+        <!-- app's own CSS -->
+        <link href="/static/styles.css" rel="stylesheet"/>
+
+        <!--js imports-->
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        <script src="https://unpkg.com/vue"></script>
+
+        <title>Variance: A Poker Hand Evaluator</title>
+    </head>
+
+    <body>
+          <div class="navbar-header">
+            <a class="navbar-brand" href="\"><h1>Variance</h1></a>
+          </div>
+
+        <main class="container-fluid">
+            <!--render deck jumbotron on right-->
+            <div class="row">
+              <div id="deck" class="col-lg-4 offset-lg-1">
+                <div class="jumbotron">
+                  <h3 class="display-5">Deck</h3>
+                  <form action="index" method="post">
+                    {% for rank in ranks %}
+                      {% for suit in suits %}
+                        {% if suits[suit] == "c" %}
+                          <!--<button v-on:click="say('{{ ranks[rank] }} &clubs;')" type="button" class="card_btn btn btn-secondary btn-lg" style="width: 3em" value="{{ ranks[rank] }}{{ suits[suit] }}">{{ ranks[rank] }} &clubs;</button>-->
+                          <button v-on:click="say('{{ ranks[rank] }}{{ suits[suit] }}')" type="button" class="card_btn btn btn-secondary btn-lg" style="width: 3em" value="{{ ranks[rank] }}{{ suits[suit] }}">{{ ranks[rank] }} &clubs;</button>
+                        {% elif suits[suit] == "s" %}
+                          <button v-on:click="say('{{ ranks[rank] }}{{ suits[suit] }}')" type="button" class="card_btn btn btn-secondary btn-lg" style="width: 3em" value="{{ ranks[rank] }}{{ suits[suit] }}">{{ ranks[rank] }} &spades;</button>
+                        {% elif suits[suit] == "d" %}
+                          <button v-on:click="say('{{ ranks[rank] }}{{ suits[suit] }}')" type="button" class="card_btn btn btn-danger btn-lg" style="width: 3em" value="{{ ranks[rank] }}{{ suits[suit] }}">{{ ranks[rank] }} &diams;</button>
+                        {% elif suits[suit] == "h" %}
+                          <button v-on:click="say('{{ ranks[rank] }}{{ suits[suit] }}')" type="button" class="card_btn btn btn-danger btn-lg" style="width: 3em" value="{{ ranks[rank] }}{{ suits[suit] }}">{{ ranks[rank] }} &hearts;</button>
+                        {% endif %}
+                      {% endfor %}
+                      <br>
+                    {% endfor %}
+                  </form>
+                </div>
+              </div>
+              <!--render board divs for right jumbotrons-->
+              <div id="board" class="col-lg-4 offset-lg-2">
+
+                <!--render hero jumbotron-->
+                <div class="jumbotron">
+                  <h3 class="display-5">Hero</h3>
+                    <div class="row top-buffer">
+                      <div id="herocard1" v-on:click="reset('__')" class="col-lg-3 offset-lg-2">
+                        <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                      </div>
+                      <div id="herocard2" v-on:click="reset('__')" class="col-lg-3 offset-lg-2">
+                        <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                      </div>
+                    </div>
+                </div>
+                <!--render villian jumbotron-->
+                <div class="jumbotron">
+                  <h3 class="display-5">Villian</h3>
+                    <div class="row top-buffer">
+                      <div id="vilcard1" v-on:click="reset('__')" class="col-lg-3 offset-lg-2">
+                        <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                      </div>
+                      <div id="vilcard2" v-on:click="reset('__')" class="col-lg-3 offset-lg-2">
+                        <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                      </div>
+                    </div>
+                </div>
+
+                <!--render board jumbotron-->
+                <div class="jumbotron">
+                  <h3 class="display-5">Board</h3>
+                  <div class="row top-buffer">
+                    <div class="col-lg-2 offset-lg-5"><h5><i>Flop</i></h5></div>
+                  </div>
+                  <div class='row top-buffer'>
+                    <div id="flop1" v-on:click="reset('__')" class="col-lg-4">
+                        <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                    </div>
+                    <div id="flop2" v-on:click="reset('__')" class="col-lg-4">
+                      <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                    </div>
+                    <div id="flop3" v-on:click="reset('__')" class="col-lg-4">
+                      <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                    </div>
+                  </div>
+                  <div class='row top-buffer'>
+                    <div class="col-lg-3 offset-lg-2"><h5><i>Turn</i></h5></div>
+                    <div class="col-lg-3 offset-lg-2"><h5><i>River</i></h5></div>
+                  </div>
+                  <div class='row top-buffer'>
+                    <div id="turn" v-on:click="reset('__')" class="col-lg-3 offset-lg-2">
+                      <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                    </div>
+                    <div id="river" v-on:click="reset('__')" class="col-lg-3 offset-lg-2">
+                      <button type="button" class="btn btn-lg btn-outline-info">[[ message ]]</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!--render results jumbotron-->
+                <div class="jumbotron">
+                  <h3 class='display-5'>Results</h3>
+                  <div id="print">
+                    <p>[[ hero ]]</p>
+                    <p>[[ villian ]]</p>
+                    <h5>[[ printing ]]</h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </main>
+
+        <!-- app's own JS -->
+          <!--needs to be imported here to make html reactive-->
+        <script src="/static/scripts.js"></script>
+
+    </body>
+</html>
