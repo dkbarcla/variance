@@ -74,18 +74,18 @@ def evaluate(holecard1, holecard2, board):
     s_cards = []
 
     # checks for flush using a counter
-    for card in range(len(full_board)):
+    for card in range(len(unique_values)):
         if full_board[card].suit == 's':
-            s_cards.append(full_board[card].rank)
+            s_cards.append(unique_values[card])
             s_counter += 1
         elif full_board[card].suit == 'c':
-            c_cards.append(full_board[card].rank)
+            c_cards.append(unique_values[card])
             c_counter += 1
         elif full_board[card].suit == 'd':
-            d_cards.append(full_board[card].rank)
+            d_cards.append(unique_values[card])
             d_counter += 1
         elif full_board[card].suit == 'h':
-            h_cards.append(full_board[card].rank)
+            h_cards.append(unique_values[card])
             h_counter += 1
 
     # if any counter is higher or equal to five, assign its cards to a flush variable, set is_flush to true
@@ -148,7 +148,7 @@ def evaluate(holecard1, holecard2, board):
         wheel = []
         full_val_strt.reverse()
         for i in range(4):
-            wheel.append(full_val_strt[(-4-i)] * 2)
+            wheel.append(full_val_strt[(3-i)] * 2)
         wheel.append(full_val_strt[-1] * 2)
 
         if wheel == [8, 6, 4, 2, 26]:
